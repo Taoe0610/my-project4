@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>选择阵营</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #111;
+      font-family: "Helvetica Neue", sans-serif;
+    }
+    .container {
+      display: flex;
+      gap: 20px;
+    }
+    .btn {
+      padding: 16px 28px;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      border: none;
+      color: #000;
+      transition: transform 0.2s ease, box-shadow 0.3s ease;
+    }
+    .btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 15px rgba(255,255,255,0.4);
+    }
+    .mirror { background: #7ec8ff; }
+    .gov    { background: #ffd166; }
+    .adam   { background: #ff6b6b; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <button class="btn mirror" onclick="location.href='mirror.html'">Mirror 阵营</button>
+    <button class="btn gov" onclick="location.href='gov.html'">政府职员</button>
+    <button class="btn adam" onclick="location.href='adam.html'">Adam 阵营</button>
+  </div>
+</body>
+</html>
