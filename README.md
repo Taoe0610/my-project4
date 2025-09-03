@@ -2,152 +2,276 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <title>扫码小彩蛋</title>
-  <!-- 引入像素字体 -->
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <title>选择阵营</title>
   <style>
     body {
       margin: 0;
-      background: #f4f4f4;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #111;
       font-family: "Helvetica Neue", sans-serif;
     }
-
-    /* 屏幕提示文字：像素风 + 红色发光 */
-    #hint {
-      position: fixed;
-      top: 10%; /* 🚀 放在上方，不挡角色 */
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 1rem;
-      color: #ff0000;
-      font-family: 'Press Start 2P', cursive;
-      z-index: 999;
-      opacity: 1;
-      text-shadow: 0 0 6px #ff4d4d, 0 0 12px #ff8080, 0 0 18px #ff0000;
-      animation: blink 1s infinite alternate;
-      transition: opacity 1s ease;
-      pointer-events: none;
-      white-space: nowrap;
+    .container {
+      display: flex;
+      gap: 20px;
     }
-
-    @keyframes blink {
-      from { opacity: 1; }
-      to { opacity: 0.3; }
-    }
-
-    /* 气泡样式 */
-    .speech-bubble {
-      position: fixed;
-      background: #e0f7ff;
-      color: #004477;
-      padding: 12px 16px;
-      border-radius: 16px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-      font-size: 14px;
-      line-height: 1.5;
-      z-index: 200;
-      opacity: 0;
-      transform: translate(-50%, -100%) scale(0.8);
-      transition: opacity 0.3s ease, transform 0.3s ease;
-      max-width: 240px;
-      text-align: center;
-      pointer-events: none;
-    }
-
-    .speech-bubble::after {
-      content: '';
-      position: absolute;
-      bottom: -10px;
-      left: 50%;
-      transform: translateX(-50%);
-      border-width: 10px 10px 0;
-      border-style: solid;
-      border-color: #e0f7ff transparent transparent transparent;
-    }
-
-    .speech-bubble.show {
-      opacity: 1;
-      transform: translate(-50%, -100%) scale(1);
-    }
-
-    /* 角色视频 */
-    #character {
-      position: fixed;
-      bottom: 50%;
-      right: 50%;
-      transform: translate(50%, 50%);
-      width: 180px;
-      z-index: 100;
+    .btn {
+      padding: 16px 28px;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: bold;
       cursor: pointer;
-      mix-blend-mode: multiply;
-      background-color: transparent;
+      border: none;
+      color: #000;
+      transition: transform 0.2s ease, box-shadow 0.3s ease;
     }
+    .btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 15px rgba(255,255,255,0.4);
+    }
+    .mirror { background: #7ec8ff; }
+    .gov    { background: #ffd166; }
+    .adam   { background: #ff6b6b; }
   </style>
 </head>
 <body>
+  <div class="container">
+    <button class="btn mirror" onclick="location.href='mirror.html'">Mirror 阵营</button>
+    <button class="btn gov" onclick="location.href='gov.html'">政府职员</button>
+    <button class="btn adam" onclick="location.href='adam.html'">Adam 阵营</button>
+  </div>
+</body>
+</html>
 
-  <!-- 提示文字 -->
-  <div id="hint">可以试着点击角色喔</div>
 
-  <!-- 气泡容器 -->
-  <div id="bubble" class="speech-bubble"></div>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>Mirror 阵营</title>
+  <style>
+    body {
+      margin: 0;
+      background: linear-gradient(135deg, #a3d5ff, #e0f7ff);
+      font-family: "Helvetica Neue", sans-serif;
+      transition: background 0.5s ease;
+      overflow: hidden;
+    }
+    .back-btn {
+      position: fixed; top: 20px; left: 20px;
+      background: rgba(0,0,0,0.7); color: #fff;
+      padding: 8px 14px; border-radius: 8px;
+      text-decoration: none; font-size: 14px;
+      transition: transform 0.2s ease, background 0.3s ease;
+      z-index: 1000;
+    }
+    .back-btn:hover { transform: scale(1.1); background: rgba(0,0,0,0.9); }
+    .character {
+      position: absolute; bottom: 20px; left: 50%;
+      transform: translateX(-50%) scale(0.9);
+      opacity: 0; transition: opacity 0.5s ease, transform 0.5s ease;
+      cursor: pointer; width: 140px;
+    }
+    .character.show { opacity: 1; transform: translateX(-50%) scale(1); }
+    .bubble {
+      position: absolute; background: #e0f7ff; color: #004477;
+      padding: 8px 12px; border-radius: 12px; font-size: 14px;
+      max-width: 200px; white-space: nowrap;
+      opacity: 0; transition: opacity 0.3s ease; pointer-events: none;
+    }
+    .bubble.show { opacity: 1; }
+  </style>
+</head>
+<body>
+  <a href="index.html" class="back-btn">返回首页</a>
 
-  <!-- Q版小人视频 -->
-  <video id="character" autoplay muted loop playsinline>
+  <video class="character" id="char1" autoplay muted loop playsinline data-bubbles='["你好，我是Mirror的分身。","来试试看和我互动吧！"]'>
     <source src="https://files.catbox.moe/vhpmku.mp4" type="video/mp4">
+  </video>
+  <video class="character" id="char2" autoplay muted loop playsinline data-bubbles='["不要害羞，点点我~","哈哈，被你发现啦！"]'>
+    <source src="https://files.catbox.moe/trm5s9.mp4" type="video/mp4">
   </video>
 
   <script>
-    const bubble = document.getElementById('bubble');
-    const character = document.getElementById('character');
-    const hint = document.getElementById('hint');
+    const characters = document.querySelectorAll('.character');
+    characters.forEach((char, i) => setTimeout(() => char.classList.add('show'), i * 600));
 
-    const greetings = [
-      '喜欢我准备的这个小彩蛋吗？',
-      "嘿！来贴贴嘛～",
-      "你们好！我叫千纳",
-      "kiss~kiss~",
-      "你会因为我是Mirror系统的分身而嫌弃我吗🥺"
-    ];
+    characters.forEach(char => {
+      char.addEventListener('click', () => {
+        const bubbles = JSON.parse(char.dataset.bubbles);
+        const message = bubbles[Math.floor(Math.random() * bubbles.length)];
+        const bubble = document.createElement('div');
+        bubble.className = 'bubble';
+        bubble.textContent = message;
+        document.body.appendChild(bubble);
 
-    // 显示气泡并定位到角色头顶
-    function showBubble(message) {
-      const rect = character.getBoundingClientRect();
-      bubble.textContent = message;
+        const rect = char.getBoundingClientRect();
+        const dir = Math.random();
+        let x = rect.left + rect.width/2, y = rect.top - 40;
+        if (dir < 0.33) { x = rect.left - 100; y = rect.top; }
+        else if (dir < 0.66) { x = rect.right + 20; y = rect.top; }
+        bubble.style.left = `${x}px`; bubble.style.top = `${y}px`;
+        requestAnimationFrame(() => bubble.classList.add('show'));
 
-      // 定位：角色头顶上方
-      const bubbleX = rect.left + rect.width / 2;
-      const bubbleY = rect.top - 20;
-
-      bubble.style.left = bubbleX + 'px';
-      bubble.style.top = bubbleY + 'px';
-
-      bubble.classList.add('show');
-      setTimeout(() => bubble.classList.remove('show'), 3000);
-    }
-
-    character.addEventListener('click', () => {
-      const message = greetings[Math.floor(Math.random() * greetings.length)];
-      showBubble(message);
-    });
-
-    // 窗口大小变化时更新气泡位置
-    window.addEventListener('resize', () => {
-      if (bubble.classList.contains('show')) {
-        const rect = character.getBoundingClientRect();
-        bubble.style.left = (rect.left + rect.width / 2) + 'px';
-        bubble.style.top = (rect.top - 20) + 'px';
-      }
-    });
-
-    // 页面加载后几秒钟后隐藏提示
-    window.addEventListener('load', () => {
-      setTimeout(() => {
-        hint.style.opacity = 0;
-        setTimeout(() => hint.style.display = 'none', 1000);
-      }, 4000); // 显示 4 秒后淡出
+        setTimeout(() => { bubble.classList.remove('show'); setTimeout(() => bubble.remove(), 300); }, 2000);
+        char.style.transform = 'translateX(-50%) scale(1.1)';
+        setTimeout(() => char.style.transform = 'translateX(-50%) scale(1)', 200);
+      });
     });
   </script>
+</body>
+</html>
 
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>政府职员</title>
+  <style>
+    body {
+      margin: 0;
+      background: linear-gradient(135deg, #ffe5d9, #ff6b6b);
+      font-family: "Helvetica Neue", sans-serif;
+      transition: background 0.5s ease;
+      overflow: hidden;
+    }
+    .back-btn {
+      position: fixed; top: 20px; left: 20px;
+      background: rgba(0,0,0,0.7); color: #fff;
+      padding: 8px 14px; border-radius: 8px;
+      text-decoration: none; font-size: 14px;
+      transition: transform 0.2s ease, background 0.3s ease;
+      z-index: 1000;
+    }
+    .back-btn:hover { transform: scale(1.1); background: rgba(0,0,0,0.9); }
+    .character {
+      position: absolute; bottom: 20px; left: 50%;
+      transform: translateX(-50%) scale(0.9);
+      opacity: 0; transition: opacity 0.5s ease, transform 0.5s ease;
+      cursor: pointer; width: 140px;
+    }
+    .character.show { opacity: 1; transform: translateX(-50%) scale(1); }
+    .bubble {
+      position: absolute; background: #ffdddd; color: #8b0000;
+      padding: 8px 12px; border-radius: 12px; font-size: 14px;
+      max-width: 200px; white-space: nowrap;
+      opacity: 0; transition: opacity 0.3s ease; pointer-events: none;
+    }
+    .bubble.show { opacity: 1; }
+  </style>
+</head>
+<body>
+  <a href="index.html" class="back-btn">返回首页</a>
+
+  <video class="character" id="char1" autoplay muted loop playsinline data-bubbles='["我是政府职员。","一切尽在掌控之中。"]'>
+    <source src="https://files.catbox.moe/zt0bg8.mp4" type="video/mp4">
+  </video>
+
+  <script>
+    const characters = document.querySelectorAll('.character');
+    characters.forEach((char, i) => setTimeout(() => char.classList.add('show'), i * 600));
+
+    characters.forEach(char => {
+      char.addEventListener('click', () => {
+        const bubbles = JSON.parse(char.dataset.bubbles);
+        const message = bubbles[Math.floor(Math.random() * bubbles.length)];
+        const bubble = document.createElement('div');
+        bubble.className = 'bubble';
+        bubble.textContent = message;
+        document.body.appendChild(bubble);
+
+        const rect = char.getBoundingClientRect();
+        bubble.style.left = `${rect.left + rect.width/2}px`;
+        bubble.style.top = `${rect.top - 40}px`;
+        requestAnimationFrame(() => bubble.classList.add('show'));
+
+        setTimeout(() => { bubble.classList.remove('show'); setTimeout(() => bubble.remove(), 300); }, 2000);
+        char.style.transform = 'translateX(-50%) scale(1.1)';
+        setTimeout(() => char.style.transform = 'translateX(-50%) scale(1)', 200);
+      });
+    });
+  </script>
+</body>
+</html>
+
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>Adam 阵营</title>
+  <style>
+    body {
+      margin: 0;
+      background: linear-gradient(135deg, #f8cfff, #ffe0f7);
+      font-family: "Helvetica Neue", sans-serif;
+      transition: background 0.5s ease;
+      overflow: hidden;
+    }
+    .back-btn {
+      position: fixed; top: 20px; left: 20px;
+      background: rgba(0,0,0,0.7); color: #fff;
+      padding: 8px 14px; border-radius: 8px;
+      text-decoration: none; font-size: 14px;
+      transition: transform 0.2s ease, background 0.3s ease;
+      z-index: 1000;
+    }
+    .back-btn:hover { transform: scale(1.1); background: rgba(0,0,0,0.9); }
+    .character {
+      position: absolute; bottom: 20px; left: 50%;
+      transform: translateX(-50%) scale(0.9);
+      opacity: 0; transition: opacity 0.5s ease, transform 0.5s ease;
+      cursor: pointer; width: 140px;
+    }
+    .character.show { opacity: 1; transform: translateX(-50%) scale(1); }
+    .bubble {
+      position: absolute; background: #f9d5ec; color: #6a1b9a;
+      padding: 8px 12px; border-radius: 12px; font-size: 14px;
+      max-width: 200px; white-space: nowrap;
+      opacity: 0; transition: opacity 0.3s ease; pointer-events: none;
+    }
+    .bubble.show { opacity: 1; }
+  </style>
+</head>
+<body>
+  <a href="index.html" class="back-btn">返回首页</a>
+
+  <video class="character" id="char1" autoplay muted loop playsinline data-bubbles='["我是Adam的守护者。","让我们走向真实的未来吧。"]'>
+    <source src="https://files.catbox.moe/lmheji.mp4" type="video/mp4">
+  </video>
+  <video class="character" id="char2" autoplay muted loop playsinline data-bubbles='["我们会带来希望。","Adam阵营等待你的选择。"]'>
+    <source src="https://files.catbox.moe/p056sd.mp4" type="video/mp4">
+  </video>
+
+  <script>
+    const characters = document.querySelectorAll('.character');
+    characters.forEach((char, i) => setTimeout(() => char.classList.add('show'), i * 600));
+
+    characters.forEach(char => {
+      char.addEventListener('click', () => {
+        const bubbles = JSON.parse(char.dataset.bubbles);
+        const message = bubbles[Math.floor(Math.random() * bubbles.length)];
+        const bubble = document.createElement('div');
+        bubble.className = 'bubble';
+        bubble.textContent = message;
+        document.body.appendChild(bubble);
+
+        const rect = char.getBoundingClientRect();
+        const dir = Math.random();
+        let x = rect.left + rect.width/2, y = rect.top - 40;
+        if (dir < 0.5) { x = rect.left - 100; y = rect.top; }
+        else { x = rect.right + 20; y = rect.top; }
+        bubble.style.left = `${x}px`; bubble.style.top = `${y}px`;
+        requestAnimationFrame(() => bubble.classList.add('show'));
+
+        setTimeout(() => { bubble.classList.remove('show'); setTimeout(() => bubble.remove(), 300); }, 2000);
+        char.style.transform = 'translateX(-50%) scale(1.1)';
+        setTimeout(() => char.style.transform = 'translateX(-50%) scale(1)', 200);
+      });
+    });
+  </script>
 </body>
 </html>
